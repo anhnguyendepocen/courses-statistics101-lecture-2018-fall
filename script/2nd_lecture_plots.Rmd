@@ -9,7 +9,8 @@ output: html_document
 ```{r setup, echo=FALSE, message=FALSE}
 library(tidyverse)
 library(scales)
-# library(readr) # Already loadeing with tidyverse
+library(tidytext)
+# library(readr) # Already loading with tidyverse
 ```
 
 # Source sentiment proportion analysis
@@ -39,10 +40,12 @@ th <- theme(panel.background = element_blank(),
 okcupid <- 
   okcupid_raw %>% 
   mutate(height = height * 2.54,
-         income = case_when(income == -1 ~ NA_integer_),
+         income = case_when(income == -1 ~ NA_integer_,
+                            TRUE ~ income),
          sex = case_when(sex == "m" ~ "male",
-                         sex == "f" ~ "female")) %>% 
-  calculate_sentiment(essay0)
+                         sex == "f" ~ "female"))
+
+okcupid <-  calculate_sentiment(okcupid, essay0)
 ```
 
 # Barplot: Smokes
@@ -203,6 +206,51 @@ drinks_job %>%
        y = NULL,
        fill = "Drinks") +
   th
-  
-  
+```
+
+# Scatterplot
+```{r}
+okcupid %>%
+        ggplot() +
+        aes(income, height) +
+        geom_point() +
+        scale_y_continuous(limits = c(140, 220)) +
+        labs(x = "Income", y = "Height", title = "Scatterplot: Income and Height")
+        th
+```
+# Scatterplot with Regression Line and SE
+```{r}
+okcupid %>%
+        ggplot() +
+        aes(income, height) +
+        geom_point(shape = 1) +
+        geom_smooth(method=lm , color="red", se=TRUE) +
+        scale_y_continuous(limits = c(140, 220)) +
+        labs(x = "Income", y = "Height", title = "Scatterplot: Income and Height with Regression Line")
+        th
+```
+
+# Scatterplot with Job Facets
+```{r}
+okcupid %>%
+        filter(job  %in% c("student", "unemployed", "construction / craftsmanship", "political / government")) %>%
+        ggplot() +
+        aes(income, height) +
+        geom_point() +
+        scale_y_continuous(limits = c(140, 220)) +
+        facet_wrap(~job) +
+        labs(x = "Income", y = "Height", title = "Scatterplot: Income and Height Within Each Job")
+        th
+```
+
+# Line-plot
+```{r}
+okcupid %>%
+        ggplot() +
+        aes(income, height, colour = sex) +
+        geom_point() +
+        geom_line() +
+        scale_y_continuous(limits = c(140, 220)) +
+        labs(x = "Income", y = "Height", title = "Spagetthiplot: Income and Height within Sex") +
+        th
 ```
