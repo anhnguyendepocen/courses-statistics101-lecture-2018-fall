@@ -220,6 +220,7 @@ okcupid %>%
              title = "Scatterplot: Yearly income and Height") +
         th
 ```
+
 # Faceted scatterplot 
 ```{r}
 top_jobs <-

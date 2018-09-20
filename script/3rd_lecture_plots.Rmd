@@ -10,6 +10,7 @@ output: html_document
 library(tidyverse)
 library(scales)
 library(tidytext)
+library(ggthemr)
 # library(readr) # Already loading with tidyverse
 ```
 
@@ -29,11 +30,22 @@ unlink(tmp)
 
 # General Theme
 ```{r}
-th <- theme(panel.background = element_blank(),
-            panel.grid.minor = element_blank(),
-            axis.line = element_line(color = "black"),
-            axis.ticks = element_line(color = "black"))
+ggthemr("copper")
 ```
+
+# Variable transformation
+```{r}
+okcupid <- 
+  okcupid_raw %>% 
+  mutate(height = height * 2.54,
+         income = case_when(income == -1 ~ NA_integer_,
+                            TRUE ~ income),
+         sex = case_when(sex == "m" ~ "male",
+                         sex == "f" ~ "female"))
+
+okcupid <-  calculate_sentiment(okcupid, essay0)
+```
+
 
 # Grouped Barplot
 ```{r}
