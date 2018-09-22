@@ -11,6 +11,8 @@ library(tidyverse)
 library(scales)
 library(tidytext)
 library(ggthemr)
+library(maps)
+library(viridis)
 # library(readr) # Already loading with tidyverse
 ```
 
@@ -63,7 +65,57 @@ okcupid %>%
         scale_y_continuous(expand = c(0,0), limits = c(0, 25000)) +
         labs(title = "Grouped Barplot: Drinking Habits Between Genders",
              fill = "Genders",
-             x = "Drinking Types",
+             x = "Drinker Types",
              y = "Count")
         
+```
+
+# Area Plot: 
+```{r}
+okcupid %>%
+        #filter(drinks != "NA",
+               #smokes != "NA") %>% 
+        mutate(drinks = factor(drinks, 
+                        levels =  c("not at all",
+                                    "rarely",
+                                    "socially",
+                                    "often",
+                                    "very often",
+                                    "desperately"))) %>%
+        group_by(drinks, smokes) %>% 
+        summarise(n = n()) %>% 
+        group_by(smokes) %>% 
+        mutate(N = sum(n),
+               freq = round(n / N * 100, 2)) %>% 
+        ggplot() +
+        aes(drinks, freq, group = smokes, fill = smokes) +
+        geom_area(position = "fill") +
+        scale_x_discrete(expand = c(0,0)) +
+        scale_y_continuous(expand = c(0,0)) +
+        labs(title = "Proportional Area Plot: Proportion of Smoker Types for Each Drinker Type",
+             x = "Drinker Types",
+             y = "Percentage",
+             fill = "Smoker Types")
+```
+
+# Map plot
+```{r}
+hungary <- map_data("world") %>%
+        filter(region == "Hungary")
+
+hungary_cities <- world.cities %>% 
+        filter(country.etc == "Hungary")
+
+hungary_cities %>% 
+        top_n(100, pop) %>% 
+        mutate( name=factor(name, unique(name))) %>%
+        ggplot() +
+        geom_polygon(data = hungary, aes(x=long, y = lat, group = group), fill="grey", alpha=0.3) +
+        geom_point(aes(x=long, y=lat, size = pop, color = pop), alpha = 0.9) +
+        scale_size_continuous(name="Population", trans="log", range=c(1, 9)) +
+        scale_alpha_continuous(name="Population", trans="log", range=c(.1, .9)) +
+        labs(title = "100 Biggest Cities in Hungary") +
+        theme(axis.title = element_blank(),
+              axis.text = element_blank(),
+              legend.position="none")
 ```
