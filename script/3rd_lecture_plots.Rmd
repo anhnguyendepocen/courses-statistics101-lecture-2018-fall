@@ -30,7 +30,7 @@ unlink(tmp)
 
 # General Theme
 ```{r}
-ggthemr("copper")
+ggthemr("grass")
 ```
 
 # Variable transformation
@@ -47,7 +47,23 @@ okcupid <-  calculate_sentiment(okcupid, essay0)
 ```
 
 
-# Grouped Barplot
+# Grouped Barplot: drinks x sex
 ```{r}
+okcupid %>%
+        mutate(drinks = factor(drinks, 
+                        levels =  c("not at all",
+                                    "rarely",
+                                    "socially",
+                                    "often",
+                                    "very often",
+                                    "desperately"))) %>%
+        ggplot() +
+        aes(drinks, fill = sex) +
+        geom_bar(position = "dodge") +
+        scale_y_continuous(expand = c(0,0), limits = c(0, 25000)) +
+        labs(title = "Grouped Barplot: Drinking Habits Between Genders",
+             fill = "Genders",
+             x = "Drinking Types",
+             y = "Count")
         
 ```
