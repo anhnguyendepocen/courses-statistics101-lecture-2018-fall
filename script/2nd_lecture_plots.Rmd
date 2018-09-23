@@ -14,7 +14,6 @@ library(tidytext)
 ```
 
 # Source sentiment proportion analysis
-
 ```{r, echo=FALSE, message=FALSE}
 source("calculate_sentiment.r")
 ```
@@ -221,6 +220,7 @@ okcupid %>%
              title = "Scatterplot: Yearly income and Height") +
         th
 ```
+
 # Faceted scatterplot 
 ```{r}
 top_jobs <-
