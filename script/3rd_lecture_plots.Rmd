@@ -12,7 +12,7 @@ library(scales)
 library(tidytext)
 library(ggthemr)
 library(maps)
-library(viridis)
+library(corrr)
 # library(readr) # Already loading with tidyverse
 ```
 
@@ -118,4 +118,13 @@ hungary_cities %>%
         theme(axis.title = element_blank(),
               axis.text = element_blank(),
               legend.position="none")
+```
+
+# Network plot: age x income correlation in each job
+```{r}
+okcupid %>% 
+        select(job, income, age) %>% 
+        nest(-job) %>% 
+        mutate(correlation = map(data, ~correlate()))
+        
 ```
