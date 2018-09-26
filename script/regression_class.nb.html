@@ -215,37 +215,63 @@ $(document).ready(function () {
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubG1fd2FpdCA8LSBsbSh3YWl0IH4gcGVvcGxlICsgdGltZSArIHBsYWNlLCBkYXRhID0gYnVzX2RmKVxuc3RhcmdhemVyKGxtX3dhaXQsIHR5cGUgPSBcImh0bWxcIilcbmBgYCJ9 -->
-<pre class="r"><code>lm_wait &lt;- lm(wait ~ people + time + place, data = bus_df)
-stargazer(lm_wait, type = &quot;html&quot;)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubG1fd2FpdF8xIDwtIGxtKHdhaXQgfiBwZW9wbGUgKyB0aW1lICsgcGxhY2UsIGRhdGEgPSBidXNfZGYpXG5sbV93YWl0XzIgPC0gbG0od2FpdCB+IHBlb3BsZSArIHRpbWUgKiBwbGFjZSwgZGF0YSA9IGJ1c19kZilcbmxtX3dhaXRfMyA8LSBsbSh3YWl0IH4gcGVvcGxlICogcGxhY2UgKyB0aW1lLCBkYXRhID0gYnVzX2RmKVxubG1fd2FpdF8xJEFJQyA8LSBBSUMobG1fd2FpdF8xKVxubG1fd2FpdF8yJEFJQyA8LSBBSUMobG1fd2FpdF8yKVxubG1fd2FpdF8zJEFJQyA8LSBBSUMobG1fd2FpdF8zKVxubG1fd2FpdF8xJEJJQyA8LSBCSUMobG1fd2FpdF8xKVxubG1fd2FpdF8yJEJJQyA8LSBCSUMobG1fd2FpdF8yKVxubG1fd2FpdF8zJEJJQyA8LSBCSUMobG1fd2FpdF8zKVxuc3RhcmdhemVyKGxtX3dhaXRfMSwgbG1fd2FpdF8yLCBsbV93YWl0XzMsIFxuICAgICAgICAgIHR5cGUgPSBcImh0bWxcIixcbiAgICAgICAgICBkZiA9IFRSVUUsXG4gICAgICAgICAgY2kgPSBUUlVFLFxuICAgICAgICAgIGRpZ2l0cyA9IDIsXG4gICAgICAgICAga2VlcC5zdGF0PWMoXCJhaWNcIiwgXCJiaWNcIixcInJzcVwiLCBcImFkai5yc3FcIiwgXCJmXCIsIFwiblwiKSlcbmBgYCJ9 -->
+<pre class="r"><code>lm_wait_1 &lt;- lm(wait ~ people + time + place, data = bus_df)
+lm_wait_2 &lt;- lm(wait ~ people + time * place, data = bus_df)
+lm_wait_3 &lt;- lm(wait ~ people * place + time, data = bus_df)
+lm_wait_1$AIC &lt;- AIC(lm_wait_1)
+lm_wait_2$AIC &lt;- AIC(lm_wait_2)
+lm_wait_3$AIC &lt;- AIC(lm_wait_3)
+lm_wait_1$BIC &lt;- BIC(lm_wait_1)
+lm_wait_2$BIC &lt;- BIC(lm_wait_2)
+lm_wait_3$BIC &lt;- BIC(lm_wait_3)
+stargazer(lm_wait_1, lm_wait_2, lm_wait_3, 
+          type = &quot;html&quot;,
+          df = TRUE,
+          ci = TRUE,
+          digits = 2,
+          keep.stat=c(&quot;aic&quot;, &quot;bic&quot;,&quot;rsq&quot;, &quot;adj.rsq&quot;, &quot;f&quot;, &quot;n&quot;))</code></pre>
 <!-- rnb-source-end -->
 <table style="text-align:center">
 <tr>
-<td colspan="2" style="border-bottom: 1px solid black">
+<td colspan="4" style="border-bottom: 1px solid black">
 </td>
 </tr>
 <tr>
 <td style="text-align:left">
 </td>
-<td>
+<td colspan="3">
 <em>Dependent variable:</em>
 </td>
 </tr>
 <tr>
 <td>
 </td>
-<td colspan="1" style="border-bottom: 1px solid black">
+<td colspan="3" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="3">
+wait
 </td>
 </tr>
 <tr>
 <td style="text-align:left">
 </td>
 <td>
-wait
+(1)
+</td>
+<td>
+(2)
+</td>
+<td>
+(3)
 </td>
 </tr>
 <tr>
-<td colspan="2" style="border-bottom: 1px solid black">
+<td colspan="4" style="border-bottom: 1px solid black">
 </td>
 </tr>
 <tr>
@@ -253,18 +279,34 @@ wait
 people
 </td>
 <td>
--3.488<sup>***</sup>
+-3.49<sup>***</sup>
+</td>
+<td>
+-3.46<sup>***</sup>
+</td>
+<td>
+-2.59<sup>**</sup>
 </td>
 </tr>
 <tr>
 <td style="text-align:left">
 </td>
 <td>
-(0.783)
+(-5.02, -1.95)
+</td>
+<td>
+(-5.00, -1.92)
+</td>
+<td>
+(-4.61, -0.57)
 </td>
 </tr>
 <tr>
 <td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
 </td>
 <td>
 </td>
@@ -274,18 +316,67 @@ people
 timeNight
 </td>
 <td>
-23.050<sup>***</sup>
+23.05<sup>***</sup>
+</td>
+<td>
+18.97<sup>**</sup>
+</td>
+<td>
+22.61<sup>***</sup>
 </td>
 </tr>
 <tr>
 <td style="text-align:left">
 </td>
 <td>
-(6.187)
+(10.92, 35.18)
+</td>
+<td>
+(2.51, 35.44)
+</td>
+<td>
+(10.55, 34.68)
 </td>
 </tr>
 <tr>
 <td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+people:placeRural
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+-2.10
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+(-5.18, 0.98)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
 </td>
 <td>
 </td>
@@ -295,18 +386,67 @@ timeNight
 placeRural
 </td>
 <td>
-14.096<sup>**</sup>
+14.10<sup>**</sup>
+</td>
+<td>
+9.62
+</td>
+<td>
+23.63<sup>**</sup>
 </td>
 </tr>
 <tr>
 <td style="text-align:left">
 </td>
 <td>
-(6.238)
+(1.87, 26.32)
+</td>
+<td>
+(-7.66, 26.90)
+</td>
+<td>
+(5.09, 42.16)
 </td>
 </tr>
 <tr>
 <td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+timeNight:placeRural
+</td>
+<td>
+</td>
+<td>
+8.99
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+(-15.46, 33.45)
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
 </td>
 <td>
 </td>
@@ -316,14 +456,26 @@ placeRural
 Constant
 </td>
 <td>
-21.263<sup>***</sup>
+21.26<sup>***</sup>
+</td>
+<td>
+23.16<sup>***</sup>
+</td>
+<td>
+16.99<sup>**</sup>
 </td>
 </tr>
 <tr>
 <td style="text-align:left">
 </td>
 <td>
-(6.596)
+(8.33, 34.19)
+</td>
+<td>
+(9.19, 37.12)
+</td>
+<td>
+(2.69, 31.29)
 </td>
 </tr>
 <tr>
@@ -331,14 +483,24 @@ Constant
 </td>
 <td>
 </td>
+<td>
+</td>
+<td>
+</td>
 </tr>
 <tr>
-<td colspan="2" style="border-bottom: 1px solid black">
+<td colspan="4" style="border-bottom: 1px solid black">
 </td>
 </tr>
 <tr>
 <td style="text-align:left">
 Observations
+</td>
+<td>
+66
+</td>
+<td>
+66
 </td>
 <td>
 66
@@ -349,7 +511,13 @@ Observations
 R<sup>2</sup>
 </td>
 <td>
-0.408
+0.41
+</td>
+<td>
+0.41
+</td>
+<td>
+0.42
 </td>
 </tr>
 <tr>
@@ -357,15 +525,41 @@ R<sup>2</sup>
 Adjusted R<sup>2</sup>
 </td>
 <td>
-0.379
+0.38
+</td>
+<td>
+0.37
+</td>
+<td>
+0.39
 </td>
 </tr>
 <tr>
 <td style="text-align:left">
-Residual Std. Error
+Akaike Inf. Crit.
 </td>
 <td>
-25.106 (df = 62)
+618.62
+</td>
+<td>
+620.06
+</td>
+<td>
+618.72
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Bayesian Inf. Crit.
+</td>
+<td>
+629.57
+</td>
+<td>
+633.20
+</td>
+<td>
+631.86
 </td>
 </tr>
 <tr>
@@ -373,18 +567,24 @@ Residual Std. Error
 F Statistic
 </td>
 <td>
-14.247<sup>***</sup> (df = 3; 62)
+14.25<sup>***</sup> (df = 3; 62)
+</td>
+<td>
+10.73<sup>***</sup> (df = 4; 61)
+</td>
+<td>
+11.27<sup>***</sup> (df = 4; 61)
 </td>
 </tr>
 <tr>
-<td colspan="2" style="border-bottom: 1px solid black">
+<td colspan="4" style="border-bottom: 1px solid black">
 </td>
 </tr>
 <tr>
 <td style="text-align:left">
 <em>Note:</em>
 </td>
-<td style="text-align:right">
+<td colspan="3" style="text-align:right">
 <sup><em></sup>p&lt;0.1; <sup><strong></sup>p&lt;0.05; <sup></strong></em></sup>p&lt;0.01
 </td>
 </tr>
@@ -393,7 +593,7 @@ F Statistic
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQpgYGB7ciBMb2FkIGxpYnJhcmllcywgaW5jbHVkZT1GQUxTRX0NCmxpYnJhcnkodGlkeXZlcnNlKQ0KbGlicmFyeShnb29nbGVzaGVldHMpDQpsaWJyYXJ5KHN0YXJnYXplcikNCmBgYA0KDQoNCldlIGludmVzdGlnYXRlZCB0aGUgZmFjdG9ycyB0aGF0IHBlb3BsZSB1c2Ugd2hlbiBlc3RpbWF0aW5nIHdhaXRpbmcgdGltZXMgYXQgYSBidXMgc3RvcC4gVGhlIG51bWJlciBvZiBwZW9wbGUgaW4gdGhlIGJ1cyBzdG9wIHdhcyB1c2VkIGFzIGEgcHJlZGljdG9yLCBhbG9uZyB3aXRoIHRpbWUgb2YgZGF5IChkYXkvbmlnaHQpLCBhbmQgcGxhY2UgKHJ1cmFsL2NpdHkpLg0KV2UgaHlwb3RoZXNpemVkIHRoYXQgYWxsIG9mIHRoZXNlIGZhY3RvcnMgd2lsbCBwcmVkaWN0IHdhaXRpbmcgdGltZXMuDQoNCmBgYHtyIFJlYWQgZGF0YSwgaW5jbHVkZT1GQUxTRX0NCmJ1c19yYXcgPC0gICAgDQogICAgICAgIGdzX3RpdGxlKCJXaGVuIHdpbGwgdGhlIGJ1cyBjb21lPyAoUmVzcG9uc2VzKSIpICU+JSANCiAgICAgICAgZ3NfcmVhZCgxKQ0KDQoNCmJ1c19kZiA8LQ0KICAgICAgICBidXNfcmF3ICU+JSANCiAgICAgICAgc2VsZWN0KC1UaW1lc3RhbXApICU+JSANCiAgICAgICAgc2V0X25hbWVzKHN0cl9leHRyYWN0KG5hbWVzKC4pLCAiLl8uX1xcZCsiKSkgJT4lIA0KICAgICAgICBtdXRhdGUoaWQgPSByb3dfbnVtYmVyKCkpICU+JSANCiAgICAgICAgZ2F0aGVyKHZhcmlhYmxlLCB3YWl0LCAtaWQpICU+JSANCiAgICAgICAgc2VwYXJhdGUodmFyaWFibGUsIA0KICAgICAgICAgICAgICAgICBpbnRvID0gYygicGxhY2UiLCAidGltZSIsICJwZW9wbGUiKSwgDQogICAgICAgICAgICAgICAgIHNlcCA9ICJfIiwgDQogICAgICAgICAgICAgICAgIGNvbnZlcnQgPSBUUlVFKSAlPiUgDQogICAgICAgIG11dGF0ZShwbGFjZSA9IGlmX2Vsc2UocGxhY2UgPT0gIlIiLCAiUnVyYWwiLCAiQ2l0eSIpLA0KICAgICAgICAgICAgICAgdGltZSA9IGlmX2Vsc2UodGltZSA9PSAiRCIsICJEYXkiLCAiTmlnaHQiKSkNCmBgYA0KDQpgYGB7ciBQbG90MX0NCmJ1c19kZiAlPiUgDQogICAgICAgIGdncGxvdCgpICsNCiAgICAgICAgYWVzKHggPSBwZW9wbGUsIHkgPSB3YWl0KSArDQogICAgICAgIGdlb21fcG9pbnQoKSArDQogICAgICAgIGdlb21fc21vb3RoKG1ldGhvZCA9ICJsbSIpICsNCiAgICAgICAgZ2d0aXRsZSgiRXN0aW1hdGVkIHdhaXRpbmcgdGltZSBiYXNlZCBvbiB0aGUgbnVtYmVyIG9mIHBlb3BsZSIpDQpgYGANCg0KYGBge3IgUGxvdDJ9DQpidXNfZGYgJT4lIA0KICAgICAgICBnZ3Bsb3QoKSArDQogICAgICAgIGFlcyh4ID0gcGVvcGxlLCB5ID0gd2FpdCkgKw0KICAgICAgICBnZW9tX3BvaW50KCkgKw0KICAgICAgICBmYWNldF9ncmlkKHRpbWUgfiBwbGFjZSkgKw0KICAgICAgICBnZW9tX3Ntb290aChtZXRob2QgPSAibG0iKSArDQogICAgICAgIGdndGl0bGUoIkVzdGltYXRlZCB3YWl0aW5nIHRpbWUgYmFzZWQgb24gdGhlIG51bWJlciBvZiBwZW9wbGUiLA0KICAgICAgICAgICAgICAgIHN1YnRpdGxlID0gInNlcGFyYXRlbHkgYnkgdGltZSBvZiBkYXkgYW5kIHBsYWNlIikNCmBgYA0KDQpgYGB7ciByZXN1bHRzID0gJ2FzaXMnLCB3YXJuaW5nPUZBTFNFfQ0KbG1fd2FpdCA8LSBsbSh3YWl0IH4gcGVvcGxlICsgdGltZSArIHBsYWNlLCBkYXRhID0gYnVzX2RmKQ0KDQpzdGFyZ2F6ZXIobG1fd2FpdCwgdHlwZSA9ICJodG1sIikNCmBgYA0KDQo=</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQpgYGB7ciBMb2FkIGxpYnJhcmllcywgaW5jbHVkZT1GQUxTRX0NCmxpYnJhcnkodGlkeXZlcnNlKQ0KbGlicmFyeShnb29nbGVzaGVldHMpDQpsaWJyYXJ5KHN0YXJnYXplcikNCmBgYA0KDQoNCldlIGludmVzdGlnYXRlZCB0aGUgZmFjdG9ycyB0aGF0IHBlb3BsZSB1c2Ugd2hlbiBlc3RpbWF0aW5nIHdhaXRpbmcgdGltZXMgYXQgYSBidXMgc3RvcC4gVGhlIG51bWJlciBvZiBwZW9wbGUgaW4gdGhlIGJ1cyBzdG9wIHdhcyB1c2VkIGFzIGEgcHJlZGljdG9yLCBhbG9uZyB3aXRoIHRpbWUgb2YgZGF5IChkYXkvbmlnaHQpLCBhbmQgcGxhY2UgKHJ1cmFsL2NpdHkpLg0KV2UgaHlwb3RoZXNpemVkIHRoYXQgYWxsIG9mIHRoZXNlIGZhY3RvcnMgd2lsbCBwcmVkaWN0IHdhaXRpbmcgdGltZXMuDQoNCmBgYHtyIFJlYWQgZGF0YSwgaW5jbHVkZT1GQUxTRX0NCmJ1c19yYXcgPC0gICAgDQogICAgICAgIGdzX3RpdGxlKCJXaGVuIHdpbGwgdGhlIGJ1cyBjb21lPyAoUmVzcG9uc2VzKSIpICU+JSANCiAgICAgICAgZ3NfcmVhZCgxKQ0KDQoNCmJ1c19kZiA8LQ0KICAgICAgICBidXNfcmF3ICU+JSANCiAgICAgICAgc2VsZWN0KC1UaW1lc3RhbXApICU+JSANCiAgICAgICAgc2V0X25hbWVzKHN0cl9leHRyYWN0KG5hbWVzKC4pLCAiLl8uX1xcZCsiKSkgJT4lIA0KICAgICAgICBtdXRhdGUoaWQgPSByb3dfbnVtYmVyKCkpICU+JSANCiAgICAgICAgZ2F0aGVyKHZhcmlhYmxlLCB3YWl0LCAtaWQpICU+JSANCiAgICAgICAgc2VwYXJhdGUodmFyaWFibGUsIA0KICAgICAgICAgICAgICAgICBpbnRvID0gYygicGxhY2UiLCAidGltZSIsICJwZW9wbGUiKSwgDQogICAgICAgICAgICAgICAgIHNlcCA9ICJfIiwgDQogICAgICAgICAgICAgICAgIGNvbnZlcnQgPSBUUlVFKSAlPiUgDQogICAgICAgIG11dGF0ZShwbGFjZSA9IGlmX2Vsc2UocGxhY2UgPT0gIlIiLCAiUnVyYWwiLCAiQ2l0eSIpLA0KICAgICAgICAgICAgICAgdGltZSA9IGlmX2Vsc2UodGltZSA9PSAiRCIsICJEYXkiLCAiTmlnaHQiKSkNCmBgYA0KDQpgYGB7ciBQbG90MX0NCmJ1c19kZiAlPiUgDQogICAgICAgIGdncGxvdCgpICsNCiAgICAgICAgYWVzKHggPSBwZW9wbGUsIHkgPSB3YWl0KSArDQogICAgICAgIGdlb21fcG9pbnQoKSArDQogICAgICAgIGdlb21fc21vb3RoKG1ldGhvZCA9ICJsbSIpICsNCiAgICAgICAgZ2d0aXRsZSgiRXN0aW1hdGVkIHdhaXRpbmcgdGltZSBiYXNlZCBvbiB0aGUgbnVtYmVyIG9mIHBlb3BsZSIpDQpgYGANCg0KYGBge3IgUGxvdDJ9DQpidXNfZGYgJT4lIA0KICAgICAgICBnZ3Bsb3QoKSArDQogICAgICAgIGFlcyh4ID0gcGVvcGxlLCB5ID0gd2FpdCkgKw0KICAgICAgICBnZW9tX3BvaW50KCkgKw0KICAgICAgICBmYWNldF9ncmlkKHRpbWUgfiBwbGFjZSkgKw0KICAgICAgICBnZW9tX3Ntb290aChtZXRob2QgPSAibG0iKSArDQogICAgICAgIGdndGl0bGUoIkVzdGltYXRlZCB3YWl0aW5nIHRpbWUgYmFzZWQgb24gdGhlIG51bWJlciBvZiBwZW9wbGUiLA0KICAgICAgICAgICAgICAgIHN1YnRpdGxlID0gInNlcGFyYXRlbHkgYnkgdGltZSBvZiBkYXkgYW5kIHBsYWNlIikNCmBgYA0KDQpgYGB7ciBmaWcud2lkdGg9MTEsIHdhcm5pbmc9RkFMU0UsIHJlc3VsdHM9J2FzaXMnfQ0KbG1fd2FpdF8xIDwtIGxtKHdhaXQgfiBwZW9wbGUgKyB0aW1lICsgcGxhY2UsIGRhdGEgPSBidXNfZGYpDQpsbV93YWl0XzIgPC0gbG0od2FpdCB+IHBlb3BsZSArIHRpbWUgKiBwbGFjZSwgZGF0YSA9IGJ1c19kZikNCmxtX3dhaXRfMyA8LSBsbSh3YWl0IH4gcGVvcGxlICogcGxhY2UgKyB0aW1lLCBkYXRhID0gYnVzX2RmKQ0KDQpsbV93YWl0XzEkQUlDIDwtIEFJQyhsbV93YWl0XzEpDQpsbV93YWl0XzIkQUlDIDwtIEFJQyhsbV93YWl0XzIpDQpsbV93YWl0XzMkQUlDIDwtIEFJQyhsbV93YWl0XzMpDQoNCmxtX3dhaXRfMSRCSUMgPC0gQklDKGxtX3dhaXRfMSkNCmxtX3dhaXRfMiRCSUMgPC0gQklDKGxtX3dhaXRfMikNCmxtX3dhaXRfMyRCSUMgPC0gQklDKGxtX3dhaXRfMykNCg0Kc3RhcmdhemVyKGxtX3dhaXRfMSwgbG1fd2FpdF8yLCBsbV93YWl0XzMsIA0KICAgICAgICAgIHR5cGUgPSAiaHRtbCIsDQogICAgICAgICAgZGYgPSBUUlVFLA0KICAgICAgICAgIGNpID0gVFJVRSwNCiAgICAgICAgICBkaWdpdHMgPSAyLA0KICAgICAgICAgIGtlZXAuc3RhdD1jKCJhaWMiLCAiYmljIiwicnNxIiwgImFkai5yc3EiLCAiZiIsICJuIikpDQpgYGANCg0K</div>
 
 
 

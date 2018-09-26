@@ -53,9 +53,24 @@ bus_df %>%
                 subtitle = "separately by time of day and place")
 ```
 
-```{r results = 'asis', warning=FALSE}
-lm_wait <- lm(wait ~ people + time + place, data = bus_df)
+```{r fig.width=11, warning=FALSE, results='asis'}
+lm_wait_1 <- lm(wait ~ people + time + place, data = bus_df)
+lm_wait_2 <- lm(wait ~ people + time * place, data = bus_df)
+lm_wait_3 <- lm(wait ~ people * place + time, data = bus_df)
 
-stargazer(lm_wait, type = "html")
+lm_wait_1$AIC <- AIC(lm_wait_1)
+lm_wait_2$AIC <- AIC(lm_wait_2)
+lm_wait_3$AIC <- AIC(lm_wait_3)
+
+lm_wait_1$BIC <- BIC(lm_wait_1)
+lm_wait_2$BIC <- BIC(lm_wait_2)
+lm_wait_3$BIC <- BIC(lm_wait_3)
+
+stargazer(lm_wait_1, lm_wait_2, lm_wait_3, 
+          type = "html",
+          df = TRUE,
+          ci = TRUE,
+          digits = 2,
+          keep.stat=c("aic", "bic","rsq", "adj.rsq", "f", "n"))
 ```
 
