@@ -1,12 +1,17 @@
 ---
 title: "When will the bus come?"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
+editor_options:
+  chunk_output_type: console
 ---
 
 ```{r Load libraries, include=FALSE}
 library(tidyverse)
 library(googlesheets)
 library(stargazer)
+library(ggfortify)
 ```
 
 
@@ -33,7 +38,7 @@ bus_df <-
                time = if_else(time == "D", "Day", "Night"))
 ```
 
-```{r Plot1}
+```{r Plot1, echo=FALSE}
 bus_df %>% 
         ggplot() +
         aes(x = people, y = wait) +
@@ -42,7 +47,7 @@ bus_df %>%
         ggtitle("Estimated waiting time based on the number of people")
 ```
 
-```{r Plot2}
+```{r Plot2, echo=FALSE}
 bus_df %>% 
         ggplot() +
         aes(x = people, y = wait) +
@@ -53,7 +58,7 @@ bus_df %>%
                 subtitle = "separately by time of day and place")
 ```
 
-```{r fig.width=11, warning=FALSE, results='asis'}
+```{r echo=FALSE, fig.width=11, warning=FALSE, results='asis'}
 lm_wait_1 <- lm(wait ~ people + time + place, data = bus_df)
 lm_wait_2 <- lm(wait ~ people + time * place, data = bus_df)
 lm_wait_3 <- lm(wait ~ people * place + time, data = bus_df)
@@ -72,5 +77,16 @@ stargazer(lm_wait_1, lm_wait_2, lm_wait_3,
           ci = TRUE,
           digits = 2,
           keep.stat=c("aic", "bic","rsq", "adj.rsq", "f", "n"))
+```
+
+# Residual diagnostics
+
+The residual diagnostics show a large deviation from normality for the larger values of the predictor. 
+
+
+```{r residuals}
+
+autoplot(lm_wait_1)
+
 ```
 
